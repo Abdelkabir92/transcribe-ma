@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^9.0.2",
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/client": "^7.0.0",
     "astro": "^5.15.8",

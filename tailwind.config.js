@@ -1,8 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: ["./src/**/*.{astro,html,js,jsx,ts,tsx,vue,svelte}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
+
+import { defineConfig } from "astro/config";
+import vercel from "@astrojs/vercel/serverless";
+
+export default defineConfig({
+  output: "server",
+  adapter: vercel(),
+});
