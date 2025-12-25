@@ -1,0 +1,96 @@
+import type { APIRoute } from 'astro';
+import fs from "fs";
+import path from "path";
+import { exec } from "child_process";
+import { promisify } from "util";
+
+const execPromise = promisify(exec);
+
+export const prerender = false;
+
+export const POST: APIRoute = async ({ request }) => {
+  try {
+    console.log("🎬 AI-CLIPS START");
+
+    const form = await request.formData();
+
+    const file = form.get("file") as File;
+    const platform = form.get("platform") as string;
+    const clipDuration = Number(form.get("clipDuration"));
+    const lang = form.get("lang") as string;
+    const quality = form.get("quality") as string;
+    const realDuration = Number(form.get("realDuration"));
+
+    if (!file) {
+      return new Response(JSON.stringify({ error: "No file" }), { status: 400 });
+    }
+
+    // حفظ الملف المؤقت
+    const tempInput = path.join(process.cwd(), "temp-input.mp4");
+    fs.writeFileSync(tempInput, Buffer.from(await file.arrayBuffer()));
+
+    // المجلد النهائي
+    const outputDir = path.join(process.cwd(), "public", "clips");
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+    // حساب عدد المقاطع
+    const totalClips = Math.ceil(realDuration / clipDuration);
+    const clipsList: string[] = [];
+
+    console.log("Duration:", realDuration);
+    console.log("Clip duration:", clipDuration);
+    console.log("Total clips:", totalClips);
+
+    // فورمات الفيديو حسب المنصة
+    const platformSizes: any = {
+      tiktok: "1080x1920",  // 9:16
+      youtube: "1920x1080", // 16:9
+      square: "1080x1080",  // 1:1
+    };
+
+    const targetSize = platformSizes[platform] || "1080x1920";
+
+    // جودة الفيديو
+    const qualityMap: any = {
+      "1080p": "5M",
+      "720p": "3M",
+      "480p": "1.5M",
+    };
+
+    const bitrate = qualityMap[quality] || "5M";
+
+    // حلقة لإنشاء المقاطع
+    for (let i = 0; i < totalClips; i++) {
+      const start = i * clipDuration;
+      const outputFile = path.join(outputDir, `clip_${Date.now()}_${i}.mp4`);
+      const subtitlesFile = outputFile.replace(".mp4", ".srt");
+
+      // 1️⃣ استخراج الترجمة (Whisper داخل FFmpeg)
+      const subtitleCmd = `ffmpeg -i "${tempInput}" -map 0:a -c:s srt -y "${subtitlesFile}"`;
+      await execPromise(subtitleCmd);
+
+      // 2️⃣ تقطيع + تغيير الحجم + جودة + subtitles
+      const clipCmd = `
+        ffmpeg -ss ${start} -i "${tempInput}" -t ${clipDuration} \
+        -vf "scale=${targetSize}" -b:v ${bitrate} -y "${outputFile}"
+      `;
+
+      await execPromise(clipCmd);
+
+      clipsList.push("/clips/" + path.basename(outputFile));
+    }
+
+    fs.unlinkSync(tempInput);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        clips: clipsList,
+      }),
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("🔥 AI-CLIPS ERROR:", err);
+    return new Response(JSON.stringify({ error: "Server error" }), { status: 500 });
+  }
+};

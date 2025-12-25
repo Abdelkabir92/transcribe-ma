@@ -1,0 +1,35 @@
+[
+  {
+    "id": "admin",
+    "name": "admin",
+    "email": "admin",
+    "password": "Admin123",
+    "minutes": 13,
+    "summaries": 22
+  },
+  {
+    "id": "176398800888521",
+    "name": "abdelkabir",
+    "email": "hamza@gmail.com",
+    "password": "Mamamiyo1992",
+    "planId": 0,
+    "credits": 95,
+    "summaries": 24,
+    "articles": 35,
+    "minutes": 138
+  },
+  {
+    "id": "1764172329819",
+    "name": "yusuf",
+    "email": "yusuf@gmail.com",
+    "password": "Mamamiyo1992",
+    "credits": 0
+  },
+  {
+    "id": "1764176774416",
+    "name": "oumaima",
+    "email": "oumaima@gmail.com",
+    "password": "Mamamiyo1992",
+    "credits": 0
+  }
+]

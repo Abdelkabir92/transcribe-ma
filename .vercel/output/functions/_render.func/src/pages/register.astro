@@ -1,0 +1,78 @@
+---
+
+import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+---
+<Layout>
+<html lang="ar" dir="rtl">
+    <meta charset="UTF-8" />
+  <body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-xl font-bold mb-4">إنشاء حساب جديد</h2>
+
+      <form id="registerForm" class="space-y-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="الاسم الكامل"
+          required
+          class="w-full border p-2 rounded"
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="البريد الإلكتروني"
+          required
+          class="w-full border p-2 rounded"
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="كلمة السر"
+          required
+          class="w-full border p-2 rounded"
+        />
+
+        <button
+          type="submit"
+          class="px-4 py-2 bg-purple-600 text-white rounded w-full"
+        >
+          إنشاء الحساب
+        </button>
+      </form>
+
+      <p class="mt-4 text-center">
+        عندك حساب؟ <a href="/login" class="text-purple-600">تسجيل الدخول</a>
+      </p>
+    </div>
+
+    <script>
+      const form = document.getElementById("registerForm");
+
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.get("name"),
+            email: formData.get("email"),
+            password: formData.get("password"),
+          }),
+        });
+
+        if (res.ok) {
+          alert("🎉 تم إنشاء الحساب بنجاح! تواصل معنا في الواتساب لتفعيل الباقة.");
+          window.location.href = "/login";
+        } else {
+          alert("❌ خطأ: البريد الإلكتروني مستعمل مسبقاً.");
+        }
+      };
+    </script>
+  </body>
+</html>
+</Layout>

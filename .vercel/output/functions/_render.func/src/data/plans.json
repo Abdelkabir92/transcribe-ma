@@ -1,0 +1,29 @@
+[
+  {
+    "id": "basic",
+    "name": "Basic",
+    "price": 29,
+    "credits": 60,
+    "summaries": 20,
+    "articles": 20,
+    "support": "normal"
+  },
+  {
+    "id": "pro",
+    "name": "Pro",
+    "price": 49,
+    "credits": 180,
+    "summaries": 50,
+    "articles": 50,
+    "support": "whatsapp"
+  },
+  {
+    "id": "enterprise",
+    "name": "Enterprise",
+    "price": 99,
+    "credits": 600,
+    "summaries": 150,
+    "articles": 150,
+    "support": "priority"
+  }
+]
