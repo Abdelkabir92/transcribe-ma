@@ -1,0 +1,147 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="تلخيص النصوص" description="تلخيص احترافي للنصوص الطويلة بدقة عالية">
+
+<section class="max-w-3xl mx-auto px-4 py-12">
+
+  <!-- TITLE -->
+  <header class="text-center mb-8">
+    <h1 class="text-3xl font-extrabold mb-3">
+      📝 تلخيص احترافي للنصوص
+    </h1>
+    <p class="text-gray-600 text-lg">
+      ألصق أي نص طويل وسنقوم بتلخيصه تلقائياً بطريقة واضحة ومفهومة.
+    </p>
+  </header>
+
+  <!-- ✅ ADSENSE (TOP – SAFE) -->
+  <div class="mb-10 border rounded-lg py-4 text-center text-gray-400 text-sm">
+    🔔 إعلان (Google AdSense)
+  </div>
+
+  <!-- TEXTAREA -->
+  <textarea
+    id="textInput"
+    placeholder="ألصق النص هنا..."
+    class="w-full h-44 p-4 border rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+  ></textarea>
+
+  <!-- BUTTON -->
+  <button
+    id="summarizeBtn"
+    class="mt-5 w-full py-3 bg-purple-600 hover:bg-purple-700
+           text-white rounded-xl text-lg font-semibold"
+  >
+    تلخيص النص
+  </button>
+
+  <!-- LOADING -->
+  <div id="loading" class="hidden mt-6 text-center text-lg">
+    ⏳ جاري تلخيص النص… المرجو الانتظار
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="hidden mt-10 space-y-6">
+
+    <div>
+      <h2 class="font-bold mb-2">📌 الملخص السريع</h2>
+      <div id="fast" class="box"></div>
+    </div>
+
+    <div>
+      <h2 class="font-bold mb-2">📌 الملخص التفصيلي</h2>
+      <div id="detailed" class="box"></div>
+    </div>
+
+    <div>
+      <h2 class="font-bold mb-2">📌 النقاط الأساسية</h2>
+      <div id="points" class="box"></div>
+    </div>
+
+    <div>
+      <h2 class="font-bold mb-2">📌 الكلمات المفتاحية</h2>
+      <div id="keywords" class="box"></div>
+    </div>
+
+    <div>
+      <h2 class="font-bold mb-2">📌 الأسئلة المقترحة</h2>
+      <div id="questions" class="box"></div>
+    </div>
+
+    <button
+      id="copyBtn"
+      class="w-full py-3 bg-gray-900 text-white rounded-xl text-lg"
+    >
+      📄 نسخ جميع النتائج
+    </button>
+
+    <!-- ✅ ADSENSE (BOTTOM – OPTIONAL) -->
+    <div class="mt-10 border rounded-lg py-4 text-center text-gray-400 text-sm">
+      🔔 إعلان (Google AdSense)
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+  .box {
+    padding: 16px;
+    background: #f5f3ff;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #111;
+  }
+</style>
+
+<script>
+  const loading = document.getElementById("loading");
+  const resultsBox = document.getElementById("results");
+
+  document.getElementById("summarizeBtn").onclick = async () => {
+    const text = document.getElementById("textInput").value.trim();
+    if (!text) {
+      alert("المرجو إدخال نص!");
+      return;
+    }
+
+    loading.classList.remove("hidden");
+    resultsBox.classList.add("hidden");
+
+    const res = await fetch("/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+
+    const data = await res.json();
+
+    loading.classList.add("hidden");
+
+    if (data.error) {
+      alert(data.error);
+      return;
+    }
+
+    document.getElementById("fast").innerText = data.fast;
+    document.getElementById("detailed").innerText = data.detailed;
+    document.getElementById("points").innerText = data.points;
+    document.getElementById("keywords").innerText = data.keywords;
+    document.getElementById("questions").innerText = data.questions;
+
+    resultsBox.classList.remove("hidden");
+  };
+
+  document.getElementById("copyBtn").onclick = () => {
+    const all =
+      document.getElementById("results").innerText;
+    navigator.clipboard.writeText(all);
+    alert("✔ تم نسخ النتائج");
+  };
+</script>
+
+</Layout>

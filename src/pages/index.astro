@@ -1,0 +1,117 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Transcribe.ma – تحويل الصوت والفيديو إلى نص بالذكاء الاصطناعي">
+
+<!-- ================= HERO ================= -->
+<section class="bg-white py-24">
+  <div class="max-w-4xl mx-auto text-center px-4">
+
+    <h1 class="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+      تحويل الصوت والفيديو إلى نص<br />
+      <span class="text-purple-600">بسهولة وبدقة عالية</span>
+    </h1>
+
+    <p class="text-lg text-gray-600 leading-relaxed">
+      Transcribe.ma منصة تعتمد على الذكاء الاصطناعي لتحويل ملفات الصوت والفيديو
+      إلى نص مكتوب، مع أدوات إضافية لمعالجة النصوص مثل التلخيص
+      وتحويل النص إلى صوت، بدون تعقيد.
+    </p>
+
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4">
+
+    <h2 class="text-2xl font-bold text-center text-gray-900 mb-12">
+      خدمات Transcribe.ma
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- تحويل الصوت إلى نص -->
+      <a href="/transcribe"
+        class="bg-white shadow-sm rounded-xl p-6 hover:shadow-lg transition border">
+        <h3 class="text-xl font-bold text-gray-900 mb-2">
+          🎧 تحويل الصوت والفيديو إلى نص
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          قم برفع ملف صوتي أو فيديو (MP3، WAV، MP4…) وسيتم
+          استخراج النص تلقائياً بدقة عالية.
+        </p>
+      </a>
+
+      <!-- تلخيص النص -->
+      <a href="/summarize"
+        class="bg-white shadow-sm rounded-xl p-6 hover:shadow-lg transition border">
+        <h3 class="text-xl font-bold text-gray-900 mb-2">
+          📝 تلخيص النصوص
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          أداة تساعدك على تلخيص المقالات والنصوص الطويلة
+          بطريقة واضحة ومركزة.
+        </p>
+      </a>
+
+      <!-- إنشاء مقال -->
+      <a href="/article"
+        class="bg-white shadow-sm rounded-xl p-6 hover:shadow-lg transition border">
+        <h3 class="text-xl font-bold text-gray-900 mb-2">
+          ✍️ إنشاء المقالات
+        </h3>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          أنشئ مقالات منظمة انطلاقاً من فكرة أو عنوان،
+          مناسبة للمحتوى التعليمي أو المهني.
+        </p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= TRUST / CONTENT ================= -->
+<section class="py-20 bg-white">
+  <div class="max-w-4xl mx-auto px-4 space-y-8 text-gray-700 leading-relaxed">
+
+    <h2 class="text-2xl font-bold text-gray-900">
+      لماذا Transcribe.ma؟
+    </h2>
+
+    <p>
+      تم تطوير Transcribe.ma لتسهيل التعامل مع الملفات الصوتية
+      والفيديوهات، خصوصاً للطلبة، الصحفيين، صناع المحتوى،
+      وأصحاب المشاريع الذين يحتاجون إلى نصوص دقيقة
+      بدون إضاعة الوقت.
+    </p>
+
+    <p>
+      تعتمد المنصة على تقنيات حديثة في معالجة الصوت
+      والنصوص، مع احترام خصوصية المستخدمين،
+      حيث لا يتم تخزين الملفات بعد معالجتها.
+    </p>
+
+  </div>
+</section>
+
+<!-- ================= DISCLAIMER (مهم لـ AdSense) ================= -->
+<section class="py-10 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 text-sm text-gray-500 leading-relaxed">
+    <p>
+      ملاحظة: النتائج التي يتم إنشاؤها عبر Transcribe.ma
+      تعتمد على أنظمة آلية وقد تحتوي على أخطاء.
+      يُنصح دائماً بمراجعة النص قبل استعماله
+      في أغراض رسمية أو مهنية.
+    </p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center py-8 text-gray-500 text-sm border-t">
+  © 2025 Transcribe.ma — جميع الحقوق محفوظة
+</footer>
+
+</Layout>

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "jsx": "preserve",
+    "allowJs": true,
+    "baseUrl": "."
+  },
+  "include": ["src", "astro.config.*", "env.d.ts"]
+}

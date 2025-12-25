@@ -1,0 +1,154 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="تحويل النص إلى صوت">
+
+<section class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+  <div class="max-w-3xl w-full bg-white shadow-lg rounded-2xl p-8">
+
+    <a href="/" class="text-purple-600 font-semibold mb-4 inline-block">
+  ← الرجوع للصفحة الرئيسية
+</a>
+
+    <h1 class="text-center text-2xl font-bold text-gray-900 mb-6">
+      🔊 تحويل النص إلى صوت بالذكاء الاصطناعي
+    </h1>
+
+    <!-- Text Input -->
+    <textarea id="ttsInput"
+      class="w-full p-4 border rounded-xl text-gray-700 focus:ring-2 focus:ring-purple-500"
+      rows="5"
+      placeholder="أدخل النص الذي تريد تحويله إلى صوت..."
+    ></textarea>
+
+    <!-- Voice Options -->
+    <label class="block mt-6 font-semibold">اختيار نوع الصوت:</label>
+
+<div class="mb-6">
+  <label class="block mb-2 font-semibold text-gray-700">اختر الصوت:</label>
+  
+  <select id="voiceSelect" class="w-full p-3 border rounded-lg">
+      <option value="alloy">Alloy (محايد)</option>
+      <option value="verse">Verse (إيقاعي)</option>
+      <option value="echo">Echo (هادئ)</option>
+      <option value="shimmer">Shimmer (نسائي)</option>
+      
+  </select>
+
+  <button 
+      onclick="previewVoice(document.getElementById('voiceSelect').value)"
+      class="mt-3 px-4 py-2 bg-purple-600 text-white rounded">
+      🔊 معاينة الصوت
+  </button>
+</div>
+
+
+
+    <!-- Speed -->
+    <label class="block mt-6 font-semibold">سرعة الصوت:</label>
+    <input id="speedInput" type="range" min="0.5" max="2" step="0.1"
+      class="w-full"
+    value="1" />
+    <p class="text-gray-600 mt-1 text-sm">السرعة: <span id="speedValue">1</span>x</p>
+
+    <!-- Buttons -->
+    <div class="mt-6 flex flex-col gap-3">
+      <button id="copyBtn" class="bg-gray-200 w-full py-2 rounded-xl">
+        نسخ النص
+      </button>
+
+      <button id="convertBtn"
+        class="bg-purple-600 text-white w-full py-3 text-lg rounded-xl">
+        🎙️ تحويل النص إلى صوت الآن
+      </button>
+    </div>
+
+    <!-- Audio Player -->
+    <audio id="audioPlayer" controls class="w-full mt-6 hidden"></audio>
+
+    <!-- Download -->
+    <button id="downloadBtn"
+     class="bg-gray-200 w-full py-2 rounded-xl">
+      ⬇ تحميل الصوت MP3
+    </button>
+
+  </div>
+</section>
+
+
+<script>
+document.getElementById("speedInput").addEventListener("input", (e) => {
+  document.getElementById("speedValue").innerText = e.target.value;
+});
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+  const text = document.getElementById("ttsInput").value.trim();
+
+  if (!text) return alert("❌ لا يوجد نص لنسخه!");
+
+  await navigator.clipboard.writeText(text);
+  alert("✔ تم نسخ النص");
+});
+
+document.getElementById("convertBtn").addEventListener("click", async () => {
+  const text = document.getElementById("ttsInput").value.trim();
+  const voice = document.getElementById("voiceSelect").value;
+  const speed = document.getElementById("speedInput").value;
+
+  if (!text) return alert("❌ المرجو إدخال النص قبل التحويل!");
+
+  const res = await fetch("/api/tts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, voice, speed }),
+  });
+
+  const audioBlob = await res.blob();
+  const audioUrl = URL.createObjectURL(audioBlob);
+
+  const player = document.getElementById("audioPlayer");
+  player.src = audioUrl;
+  player.classList.remove("hidden");
+
+  const downloadBtn = document.getElementById("downloadBtn");
+  downloadBtn.classList.remove("hidden");
+
+  downloadBtn.onclick = () => {
+    const a = document.createElement("a");
+    a.href = audioUrl;
+    a.download = "audio.mp3";
+    a.click();
+  };
+});
+
+window.previewVoice = async function (voice) {
+  const phrase = "مرحبا! هذا مثال على صوت " + voice;
+
+  const res = await fetch("/api/tts-preview", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ voice, phrase })
+  });
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+
+  const audio = new Audio(url);
+  audio.play();
+
+  document.getElementById("voiceSelect").value = voice;
+}
+
+ // Enable download
+  downloadBtn.classList.remove("hidden");
+  downloadBtn.onclick = () => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "converted_audio.mp3";
+    a.click();
+  };
+
+</script>
+
+</Layout>

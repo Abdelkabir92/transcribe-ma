@@ -1,0 +1,97 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="AI Clips ✂️">
+
+<section class="container" style="max-width: 600px; margin: auto;">
+  <h1>✂️ AI Clips – توليد مقاطع تلقائية</h1>
+
+  <input id="fileInput" type="file" accept="video/*" />
+
+  <select id="platform">
+    <option value="tiktok">TikTok / Reels (9:16)</option>
+    <option value="youtube">YouTube (16:9)</option>
+    <option value="square">Square (1:1)</option>
+  </select>
+
+  <input id="clipDuration" type="number" value="30" />
+
+  <select id="quality">
+    <option value="1080p">1080p (أفضل جودة)</option>
+    <option value="720p">720p</option>
+    <option value="480p">480p</option>
+  </select>
+
+  <button id="createBtn">إنشاء المقاطع الآن 🚀</button>
+
+  <p id="status"></p>
+  <div id="clips"></div>
+</section>
+
+<script>
+  let realDuration = 0;
+
+  const fileInput = document.getElementById("fileInput");
+  const createBtn = document.getElementById("createBtn");
+  const status = document.getElementById("status");
+  const clipsDiv = document.getElementById("clips");
+
+  const video = document.createElement("video");
+  video.preload = "metadata";
+
+  fileInput.onchange = () => {
+    const file = fileInput.files[0];
+    video.src = URL.createObjectURL(file);
+
+    video.onloadedmetadata = () => {
+      realDuration = video.duration;
+      console.log("Real Duration =", realDuration);
+    };
+  };
+
+  createBtn.onclick = async () => {
+    const file = fileInput.files[0];
+    if (!file) return alert("اختر فيديو أولا");
+
+    status.innerText = "⏳ جاري معالجة الفيديو...";
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("realDuration", realDuration);
+    formData.append("platform", platform.value);
+    formData.append("clipDuration", clipDuration.value);
+    formData.append("quality", quality.value);
+
+    const res = await fetch("/api/ai-clips", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    console.log("SERVER:", data);
+
+    if (data.clips) {
+      status.innerText = "✔️ تم إنشاء المقاطع";
+
+      clipsDiv.innerHTML = data.clips
+        .map((c) => `<video src="${c}" controls width="200"></video>`)
+        .join("");
+    } else {
+      status.innerText = "❌ خطأ في إنشاء المقاطع";
+    }
+  };
+</script>
+
+<style>
+  .container { padding: 20px; }
+  button {
+    background: purple;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+  }
+</style>
+
+</Layout>

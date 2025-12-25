@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Subtitle Generator 🎬">
+<section style="max-width:900px;margin:auto">
+
+  <h1>🎬 Subtitle Generator</h1>
+
+  <div style="margin:20px 0">
+    <button id="btn-srt">SRT</button>
+    <button id="btn-vtt">VTT</button>
+    <button id="btn-txt">TXT</button>
+  </div>
+
+  <pre id="preview">Waiting for subtitles data...</pre>
+
+</section>
+
+<script>
+const raw = localStorage.getItem("transcript_segments");
+
+if (!raw) {
+  document.getElementById("preview").textContent =
+    "❌ لا توجد Segments، رجع لصفحة التحويل";
+  throw new Error("No segments");
+}
+
+const segments = JSON.parse(raw);
+
+async function generate(format) {
+  const res = await fetch("/api/generate-subtitles", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ segments, format })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("preview").textContent = data.result;
+}
+
+document.getElementById("btn-srt").onclick = () => generate("srt");
+document.getElementById("btn-vtt").onclick = () => generate("vtt");
+document.getElementById("btn-txt").onclick = () => generate("txt");
+</script>
+</Layout>

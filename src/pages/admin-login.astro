@@ -1,0 +1,41 @@
+---
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const username = data.get("username");
+  const password = data.get("password");
+
+  const apiUrl = new URL("/api/admin-login", Astro.request.url);
+
+  const res = await fetch(apiUrl, {
+    method: "POST",
+    body: JSON.stringify({ username, password }),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const result = await res.json();
+  console.log("LOGIN RESULT:", result);
+
+  if (result.ok) {
+    return Astro.redirect("/admin");
+  } else {
+    error = "❌ معلومات الدخول غير صحيحة";
+  }
+}
+---
+
+<html lang="ar" dir="rtl">
+ <meta charset="UTF-8" />
+
+  <body>
+    <h1>🔐 تسجيل دخول الأدمين</h1>
+    <form method="POST">
+      <input name="username" placeholder="اسم الأدمين" />
+      <input name="password" type="password" placeholder="كلمة السر" />
+      <button>تسجيل الدخول</button>
+    </form>
+
+    {error && <p style="color:red;">{error}</p>}
+  </body>
+</html>

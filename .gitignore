@@ -1,0 +1,29 @@
+# ENV
+.env
+.env.local
+.env.production
+
+# Node
+node_modules/
+
+# Build
+dist/
+.build/
+
+# Astro
+.astro/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+
+# Temp
+tmp/
+*.wav

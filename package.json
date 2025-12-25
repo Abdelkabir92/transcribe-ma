@@ -1,0 +1,26 @@
+{
+  "name": "transcribe-videos",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/client": "^7.0.0",
+    "astro": "^5.15.8",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^6.9.1",
+    "resend": "^6.5.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "prisma": "^7.0.0",
+    "tailwindcss": "^3.4.18"
+  }
+}

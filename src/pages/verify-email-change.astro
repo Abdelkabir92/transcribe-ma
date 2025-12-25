@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import fs from "fs/promises";
+import path from "path";
+
+const TOKENS_FILE = path.join(process.cwd(), "src", "data", "tokens.json");
+const USERS_FILE = path.join(process.cwd(), "src", "data", "users.json");
+
+async function loadTokens() {
+  try {
+    const raw = await fs.readFile(TOKENS_FILE, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return { passwordResets: [], emailChanges: [] };
+  }
+}
+
+async function saveTokens(tokens: any) {
+  await fs.writeFile(TOKENS_FILE, JSON.stringify(tokens, null, 2), "utf-8");
+}
+
+async function loadUsers() {
+  const raw = await fs.readFile(USERS_FILE, "utf-8");
+  return JSON.parse(raw);
+}
+
+async function saveUsers(users: any) {
+  await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
+}
+
+const { searchParams } = Astro.url;
+const token = searchParams.get("token") || "";
+
+let message = "جاري معالجة الطلب...";
+let success = false;
+
+if (!token) {
+  message = "الرابط غير صالح.";
+} else {
+  const tokens = await loadTokens();
+  const record = tokens.emailChanges.find((t: any) => t.token === token);
+
+  if (!record) {
+    message = "الرابط غير صالح أو استُعمل من قبل.";
+  } else if (new Date(record.expiresAt).getTime() < Date.now()) {
+    message = "انتهت مدة صلاحية الرابط.";
+  } else {
+    const users = await loadUsers();
+    const user = users.find((u: any) => u.id === record.userId);
+
+    if (!user) {
+      message = "المستخدم غير موجود.";
+    } else {
+      user.email = record.newEmail;
+      await saveUsers(users);
+
+      tokens.emailChanges = tokens.emailChanges.filter(
+        (t: any) => t.token !== token
+      );
+      await saveTokens(tokens);
+
+      message = "✅ تم تغيير الإيميل بنجاح.";
+      success = true;
+    }
+  }
+}
+---
+
+<Layout title="تأكيد تغيير الإيميل">
+  <section class="max-w-md mx-auto mt-16 bg-white shadow-lg rounded-2xl p-6 text-center">
+    <p class={success ? "text-green-600 text-lg" : "text-red-500 text-lg"}>
+      {message}
+    </p>
+
+    <a
+      href="/dashboard"
+      class="inline-block mt-6 text-purple-600 hover:underline"
+    >
+      الرجوع للوحة التحكم
+    </a>
+  </section>
+</Layout>

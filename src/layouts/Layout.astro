@@ -1,0 +1,63 @@
+---
+import "../styles/global.css";
+import { parse } from "cookie";
+
+const cookies = parse(Astro.request.headers.get("cookie") || "");
+const token = cookies["user_token"];
+
+const { title = "Transcribe" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="bg-gray-900 text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+
+    <!-- ✅ Google AdSense (مرة وحدة فقط) -->
+    {/*
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+      crossorigin="anonymous">
+    </script>
+    */}
+  </head>
+
+  <body class="font-sans min-h-screen">
+
+    <!-- NAVBAR -->
+    <header class="w-full border-b border-gray-700 bg-gray-900">
+      <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2">
+          <div class="bg-gradient-to-r from-violet-500 to-purple-600 text-white px-2 py-1 rounded-md font-bold">
+            TS
+          </div>
+          <span class="font-semibold text-gray-200">
+            Transcribe.ma
+          </span>
+        </a>
+
+     
+
+      </nav>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="max-w-6xl mx-auto px-6 py-10">
+      <slot />
+    </main>
+
+  </body>
+  <footer class="mt-20 border-t pt-6 text-sm text-gray-400 text-center space-x-4">
+  <a href="/about">من نحن</a>
+  <a href="/privacy-policy">سياسة الخصوصية</a>
+  <a href="/terms">شروط الاستخدام</a>
+  <a href="/disclaimer">إخلاء المسؤولية</a>
+  <a href="/contact">اتصل بنا</a>
+</footer>
+
+</html>

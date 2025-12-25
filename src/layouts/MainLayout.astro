@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+
+import { parse } from "cookie";
+
+const cookies = parse(Astro.request.headers.get("cookie") || "");
+const token = cookies["user_token"]; // واش داخل ولا لا
+---
+
+<html lang="ar" dir="rtl">
+  <body>
+
+    <header style="padding: 20px; display:flex; justify-content:space-between;">
+      <nav style="display:flex; gap:20px;">
+        <a href="/">الرئيسية</a>
+        <a href="/pricing">الأسعار</a>
+
+        {token && (
+          <a href="/dashboard">لوحة التحكم</a>
+        )}
+      </nav>
+
+      <div>
+        {!token ? (
+          <a href="/login" style="color: purple;">تسجيل الدخول</a>
+        ) : (
+          <a href="/logout" style="color: red;">تسجيل الخروج</a>
+        )}
+      </div>
+    </header>
+
+    <slot />
+  </body>
+</html>
